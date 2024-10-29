@@ -26,7 +26,7 @@
                               <select name="role_id" id="role_id">
 
                                 <%for (var i=0;i<roleList.length;i++) {%>
-                                    <option value="<%=roleList[i].role_id%>"><%=roleList[i].title%></option>                                   
+                                    <option value="<%=roleList[i].role_id%>" <%if(roleList[i].role_id==adminResult.role_id){%>selected<%}%>><%=roleList[i].title%></option>                                   
                                 <%}%>
                                 
                                 </select>

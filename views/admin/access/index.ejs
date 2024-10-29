@@ -62,7 +62,7 @@
                     
                                                     <td><%=list[i].items[j].description%></td>
                                                 
-                                                    <td class="text-center"><a href="/<%=config.adminPath%>/access/edit?id=<%=list[i].items[j].access_id%>">修改</a>  <a href="/admin/delete?id=<%=list[i].items[j].access_id%>&model=Access">删除</a></td>
+                                                    <td class="text-center"><a href="/<%=config.adminPath%>/access/edit?id=<%=list[i].items[j].access_id%>">修改</a>  <a href="/<%=config.adminPath%>/access/delete?id=<%=list[i].items[j].access_id%>&model=Access">删除</a></td>
                                                 </tr>
         
                                 <%}%>

@@ -22,7 +22,7 @@
                         <td><%=roleList[i].title%></td>
                         <td><%=roleList[i].description%></td>
                         <td><%=helper.formatTime(roleList[i].add_time)%></td>
-                        <td class="text-center"><a href="/<%=config.adminPath%>/role/edit?role_id=<%=roleList[i].role_id%>">授权</a>  <a href="/<%=config.adminPath%>/role/edit?role_id=<%=roleList[i].role_id%>">修改</a> <a class="delete" href="/<%=config.adminPath%>/role/delete?role_id=<%=roleList[i].role_id%>">删除</a></td>
+                        <td class="text-center"><a href="/<%=config.adminPath%>/role/auth?role_id=<%=roleList[i].role_id%>">授权</a>  <a href="/<%=config.adminPath%>/role/edit?role_id=<%=roleList[i].role_id%>">修改</a> <a class="delete" href="/<%=config.adminPath%>/role/delete?role_id=<%=roleList[i].role_id%>">删除</a></td>
                     </tr>
 
                     <%}%>

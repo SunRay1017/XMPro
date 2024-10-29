@@ -54,4 +54,36 @@ export class AccessController {
       }
 
   }
+
+  @Get('edit')
+  @Render("admin/access/edit")
+  async edit(@Query() query) {
+    const moduleList= await this.accessService.findModules();
+    const list=await this.accessService.findRecord(query.id)
+    return {
+      moduleList,
+      list
+    }
+  };
+  @Post('doEdit')
+  async doEdit(@Body() body, @Response() res) {
+   const result= await this.accessService.update(body);
+
+    if (result&&result.code==="success") {
+
+      this.toolsService.success(res, `/${Config.adminPath}/access`);
+  } else {
+      this.toolsService.error(res, `/${Config.adminPath}/access`, result.msg,);
+
+  }
+  }
+  @Get('delete')
+  async delete(@Query() query, @Response() res) {
+    var result = await this.accessService.delete(query.id);
+    if (result && result.code === "success") {
+      this.toolsService.success(res, `/${Config.adminPath}/access`);
+    }
+    this.toolsService.error(res, `/${Config.adminPath}/access`, result.msg);
+
+  }
 }

@@ -2,11 +2,17 @@ import { Injectable } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Admin } from '../../schema/admin.entity';
+import { Config } from 'src/config/config';
+import { RoleService } from '../role/role.service';
+import { AccessService } from '../access/access.service';
 @Injectable()
 export class AdminService {
   constructor(
     @InjectRepository(Admin)
     private readonly adminRepository: Repository<Admin>,
+    private roleService: RoleService, 
+    private accessService:AccessService
+   
 
   ) { }
   async findOne(admin) {
@@ -65,4 +71,63 @@ export class AdminService {
       return { code: "fail", msg: '删除用户失败', data: {} };
     }
   }
+
+  async checkAuth(req) {
+
+    /*
+      1、获取当前用户的角色    （如果超级管理员跳过权限判断 is_super=1）
+      2、根据角色获取当前角色的权限列表                       
+      3、获取当前访问的url 对应的权限id
+      4、判断当前访问的url对应的权限id 是否在权限列表中的id中
+  */
+
+    //  1、获取当前用户的角色
+
+    var pathname: string = req.baseUrl;
+
+    pathname = pathname.replace(`/${Config.adminPath}/`, '');
+    console.log("%c Line:89 🥓 pathname", "color:#6ec1c2", pathname);
+
+    var userinfo = req.session.userinfo;
+    var role_id = userinfo.role_id;
+    if (userinfo.is_super == 1 || pathname == 'login/loginOut' ||pathname == "main/welcome") {
+        return true;
+    }
+
+    // 2、根据角色获取当前角色的权限列表
+
+    var accessResult = await this.roleService.queryAccess(role_id);
+
+    var roleAccessArray = [];
+    accessResult.forEach(value => {
+        roleAccessArray.push(value.access_id.toString());
+    });
+
+    console.log(roleAccessArray);
+
+
+    //   3、获取当前访问的url 对应的权限id
+
+
+    var accessList = await this.accessService.findAccessByUrl(pathname);
+
+    if (accessList.length > 0) {
+
+        // 4、判断当前访问的url对应的权限id 是否在权限列表中的id中
+
+        if (roleAccessArray.indexOf(accessList[0].access_id.toString()) != -1) {
+
+            return true;
+        } else {
+            return false;
+        }
+
+    } else {
+        return false;
+    }
+
+
+
+
+}
 }
