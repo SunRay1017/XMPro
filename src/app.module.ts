@@ -6,6 +6,7 @@ import { ApiModule } from './module/api/api.module';
 import { AdminauthMiddleware } from "./middleware/adminauth/adminauth.middleware"
 import {InitMiddleware} from './middleware/init/init.middleware';
 import { Config } from './config/config';
+
 @Module({
   imports: [TypeOrmModule.forRoot({
     type: 'mysql',
