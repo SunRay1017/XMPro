@@ -19,7 +19,7 @@ export class GoodsCateController {
     const list = await this.goodsCateService.find()
     //  取出顶级模块
     const arr = list.filter(item => item.pid === "0")
-    
+
     for (var j = 0; j < arr.length; j++) {
       arr[j]["items"] = []
       for (var i = 0; i < list.length; i++) {
@@ -35,6 +35,28 @@ export class GoodsCateController {
       list: arr
     }
   }
+  @Get("list")
+  async list(@Response() res) {
+    const list = await this.goodsCateService.find()
+    //  取出顶级模块
+    const arr = list.filter(item => item.pid === "0")
+
+    for (var j = 0; j < arr.length; j++) {
+      arr[j]["children"] = []
+      for (var i = 0; i < list.length; i++) {
+        if (arr[j]._id === list[i].pid) {
+          arr[j]["children"].push(list[i])
+        }
+
+      }
+    }
+    res.send({
+      status: 200,
+      msg: "",
+      data: arr
+    })
+
+  }
 
   @Get('add')
   @Render('admin/goodsCate/add')
@@ -44,24 +66,51 @@ export class GoodsCateController {
       cateList: result
     };
   }
+  @Get('getTopCates')
+  async getTopCates(@Response() res) {
+    var list = await this.goodsCateService.findByPid("0");
+    const arr = list.map(item => ({
+      label: item.title,
+      value: item._id
+    }))
+    const result = [{
+      value: "0",
+      label: "顶级分类"
+    }, ...arr]
+
+    res.send({
+      status: 200,
+      msg: "",
+      data: result
+    })
+    // return {
+    //   cateList: result
+    // };
+  }
 
   @Post('doAdd')
   @UseInterceptors(FileInterceptor('cate_img'))
   async doAdd(@Body() body, @UploadedFile() file, @Response() res) {
+    // console.log("%c Line:94 🍔 file", "color:#fca650", file);
+    // console.log("%c Line:94 🍺 body", "color:#f5ce50", body);
 
 
-    let {saveDir,uploadDir} = this.toolsService.uploadFile(file);
+    let { saveDir, uploadDir } = this.toolsService.uploadFile(file);
     try {
 
       await this.goodsCateService.add({ ...body, cate_img: saveDir });
-      if(uploadDir){
+      if (uploadDir) {
         this.toolsService.jimpImg(uploadDir)
       }
-      this.toolsService.success(res, `/${Config.adminPath}/goodsCate`);
+      res.send({
+        status: 200,
+
+      })
+      // this.toolsService.success(res, `/${Config.adminPath}/goodsCate`);
 
     } catch (error) {
       console.log(error);
-      this.toolsService.error(res, '非法请求', `/${Config.adminPath}/goodsCate/add`);
+      // this.toolsService.error(res, '非法请求', `/${Config.adminPath}/goodsCate/add`);
 
     }
 
@@ -100,27 +149,34 @@ export class GoodsCateController {
 
       if (file) {
 
-        let {saveDir,uploadDir} = this.toolsService.uploadFile(file);
-        await this.goodsCateService.update({...body,cate_img:saveDir});
-        if(uploadDir){
+        let { saveDir, uploadDir } = this.toolsService.uploadFile(file);
+        await this.goodsCateService.update({ ...body, cate_img: saveDir });
+        if (uploadDir) {
           this.toolsService.jimpImg(uploadDir)
         }
       } else {
         await this.goodsCateService.update(body);
       }
-      this.toolsService.success(res, `/${Config.adminPath}/goodsCate`);
+      res.send({
+        status: 200,
+
+      })
+      // this.toolsService.success(res, `/${Config.adminPath}/goodsCate`);
     } catch (error) {
-      console.log("%c Line:110 🍰 error", "color:#7f2b82", error);
-      this.toolsService.error(res, '修改失败', `/${Config.adminPath}/goodsCate/edit?id=${id}`);
+      // console.log("%c Line:110 🍰 error", "color:#7f2b82", error);
+      // this.toolsService.error(res, '修改失败', `/${Config.adminPath}/goodsCate/edit?id=${id}`);
     }
 
 
   }
 
 
-  @Get('delete')
-  async delete(@Query() query, @Response() res) {
-    let result = await this.goodsCateService.delete( query.id);
-    this.toolsService.success(res, `/${Config.adminPath}/goodsCate`);
+  @Post('delete')
+  async delete(@Body() body, @Response() res) {
+    let result = await this.goodsCateService.delete(body.id);
+    res.send({
+      status: 200,
+
+    })
   }
 }

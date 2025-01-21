@@ -17,6 +17,16 @@ export class FocusController {
     };
 
   }
+  @Get("list")
+  async getList(@Response() res) {
+    let result = await this.focusService.find();
+
+    res.send({
+      status: 200,
+      msg: "",
+      data: result
+    })
+  }
   @Get("add")
   @Render('admin/focus/add')
   add() {
@@ -27,12 +37,17 @@ export class FocusController {
   @Post("doAdd")
   @UseInterceptors(FileInterceptor("focus_img"))
   async doAdd(@Body() body, @UploadedFile() file, @Response() res) {
+    console.log("%c Line:40 🍌 file", "color:#b03734", file);
     let saveDir = this.toolsService.uploadFile(file);
-    console.log(saveDir);
+    console.log("%c Line:42 🍋 saveDir", "color:#2eafb0", saveDir);
     await this.focusService.add(Object.assign(body, {
-      focus_img: saveDir
+      focus_img: saveDir.saveDir
     }))
-    this.toolsService.success(res, `/${Config.adminPath}/focus`);
+    res.send({
+      status: 200,
+
+    })
+    // this.toolsService.success(res, `/${Config.adminPath}/focus`);
 
   }
 
@@ -54,6 +69,7 @@ export class FocusController {
   @Post('doEdit')
   @UseInterceptors(FileInterceptor('focus_img'))
   async doEdit(@Body() body, @UploadedFile() file, @Response() res) {
+    console.log("%c Line:72 🍞 file", "color:#33a5ff", file);
 
 
     let _id = body._id;
@@ -63,7 +79,7 @@ export class FocusController {
       await this.focusService.update({
         "_id": _id,
         ...body,
-        focus_img: saveDir
+        focus_img: saveDir.saveDir
       });
     } else {
       await this.focusService.update({
@@ -71,14 +87,20 @@ export class FocusController {
         ...body
       });
     }
+    res.send({
+      status: 200,
 
-    this.toolsService.success(res, `/${Config.adminPath}/focus`);
+    })
+    // this.toolsService.success(res, `/${Config.adminPath}/focus`);
 
   }
 
-  @Get('delete')  
-  async delete(@Query() query,@Response() res) {
-      var result = await this.focusService.delete(query.id);     
-      this.toolsService.success(res, `/${Config.adminPath}/focus`);
+  @Post('delete')
+  async delete(@Body() body, @Response() res) {
+    var result = await this.focusService.delete(body.id);
+    res.send({
+      status: 200,
+    })
+    // this.toolsService.success(res, `/${Config.adminPath}/focus`);
   }
 }

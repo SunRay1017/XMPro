@@ -14,6 +14,15 @@ export class GoodsTypeController {
       list: result
     };
   };
+  @Get("list")
+  async getList(@Response() res) {
+    var result = await this.goodsTypeService.find();
+    res.send({
+      status: 200,
+      msg: "",
+      data: result
+    })
+  };
 
   @Get('add')
   @Render('admin/goodsType/add')

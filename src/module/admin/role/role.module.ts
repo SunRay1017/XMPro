@@ -19,6 +19,17 @@ export class RoleController {
             roleList: result || []
         };
     }
+    @Get("list")
+
+    async getList(@Response() res) {
+        var result = await this.roleService.find();
+
+        res.send({
+            status: 200,
+            msg: "",
+            data: result
+        })
+    }
 
     @Get('add')
     @Render('admin/role/add')
@@ -28,22 +39,22 @@ export class RoleController {
 
     @Post('doAdd')
     async doAdd(@Body() body, @Response() res) {
-        console.log("%c Line:31 🥖 body", "color:#6ec1c2", body);
-
-        console.log(body);
-
         if (body.title != '') {
             var result = await this.roleService.add(body);
 
             if (result && result.code === "success") {
+                res.send({
+                    status: 200,
+                    msg: "",
+                })
 
-                this.toolsService.success(res, `/${Config.adminPath}/role`);
+                // this.toolsService.success(res, `/${Config.adminPath}/role`);
             } else {
-                this.toolsService.error(res, `/${Config.adminPath}/role`, result.msg,);
+                // this.toolsService.error(res, `/${Config.adminPath}/role`, result.msg,);
 
             }
         } else {
-            this.toolsService.error(res, `/${Config.adminPath}/role`, '标题不能为空',);
+            // this.toolsService.error(res, `/${Config.adminPath}/role`, '标题不能为空',);
         }
 
     }
@@ -65,25 +76,32 @@ export class RoleController {
             var result = await this.roleService.update(body);
             console.log("%c Line:65 🥛 result", "color:#465975", result);
             if (result && result.code === "success") {
-                this.toolsService.success(res, `/${Config.adminPath}/role`);
+                res.send({
+                    status: 200,
+                    msg: "",
+                })
+                // this.toolsService.success(res, `/${Config.adminPath}/role`);
             } else {
-                this.toolsService.error(res, `/${Config.adminPath}/role`, result.msg);
+                // this.toolsService.error(res, `/${Config.adminPath}/role`, result.msg);
             }
 
         } else {
-            this.toolsService.error(res, `/${Config.adminPath}/role`, '标题不能为空');
+            // this.toolsService.error(res, `/${Config.adminPath}/role`, '标题不能为空');
         }
     }
 
 
-    @Get('delete')
-    async delete(@Query() query, @Response() res) {
-        var result = await this.roleService.delete(query.role_id);
-        console.log(result);
+    @Post('delete')
+    async delete(@Body() body, @Response() res) {
+        var result = await this.roleService.delete(body.id);
         if (result && result.code === "success") {
-            this.toolsService.success(res, `/${Config.adminPath}/role`);
+            res.send({
+                status: 200,
+                msg: "",
+            })
+            // this.toolsService.success(res, `/${Config.adminPath}/role`);
         }
-        this.toolsService.error(res, `/${Config.adminPath}/role`, result.msg);
+        // this.toolsService.error(res, `/${Config.adminPath}/role`, result.msg);
 
     }
     @Get('auth')
@@ -127,10 +145,47 @@ export class RoleController {
         }
 
     }
+    @Get('getAuthList')
+    async getAuthList(@Response() res) {
+        // 获取改角色下的所有权限
+        const list = await this.accessService.find()
+        const transList = list.map(item => ({
+            title: item.action_name,
+            key: item.access_id,
+            module_id: item.module_id
+        }))
+        //  取出顶级模块
+        const arr: any = transList.filter(item => item.module_id === "0")
+
+        for (var j = 0; j < arr.length; j++) {
+            arr[j]["children"] = []
+            for (var i = 0; i < transList.length; i++) {
+                if (arr[j].key === transList[i].module_id) {
+                    arr[j]["children"].push(transList[i])
+                }
+
+            }
+        }
+        res.send({
+            status: 200,
+            msg: "",
+            data: arr
+        })
+
+
+    }
+    @Post('getAccessByRoleId')
+    async getAccessByRoleId(@Body() body, @Response() res) {
+        const accessRes = await this.roleService.queryAccess(body.role_id)
+
+        res.send({
+            status: 200,
+            msg: "",
+            data: accessRes
+        })
+    }
     @Post('doAuth')
     async doAuth(@Body() body, @Response() res) {
-        console.log(body);
-
         var role_id = body.role_id;
 
         var access_node = body.access_node;
@@ -148,6 +203,10 @@ export class RoleController {
                 access_id: access_node[i]
             })
         }
-        this.toolsService.success(res, `/${Config.adminPath}/role/auth?role_id=${role_id}`);
+        res.send({
+            status: 200,
+            msg: "",
+        })
+        // this.toolsService.success(res, `/${Config.adminPath}/role/auth?role_id=${role_id}`);
     }
 }

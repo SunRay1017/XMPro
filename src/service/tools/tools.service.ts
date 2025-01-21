@@ -21,11 +21,12 @@ const sharp = require('sharp');
 export class ToolsService {
   getCaptcha() {
     var captcha = svgCaptcha.create({
-      size: 2,
+      size: 4,
       fontSize: 50,
       width: 100,
       height: 34,
-      background: "#87e8de"
+      background: "#fff",
+      color: true
     });
     return captcha;
   }

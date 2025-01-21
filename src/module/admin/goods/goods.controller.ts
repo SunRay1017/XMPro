@@ -1,4 +1,4 @@
-import { Controller, Get, Render, Post, UseInterceptors, UploadedFile } from '@nestjs/common';
+import { Controller, Get, Render, Post, UseInterceptors, UploadedFile,Response } from '@nestjs/common';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { Config } from 'src/config/config';
 import { GoodsService } from 'src/service/goods/goods.service';
@@ -19,6 +19,13 @@ export class GoodsController {
         console.log(result);
         // return '商品模块';
         return {}
+    }
+    @Get("list")
+    async getList(@Response() res) {
+
+        var result = await this.goodsService.find();
+
+        res.send({status:200,data:result})
     }
 
     @Get('add')

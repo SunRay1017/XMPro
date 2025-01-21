@@ -3,7 +3,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { AdminModule } from './module/admin/admin.module';
 import { DefaultModule } from './module/default/default.module';
 import { ApiModule } from './module/api/api.module';
-import { AdminauthMiddleware } from "./middleware/adminauth/adminauth.middleware"
+// import { AdminauthMiddleware } from "./middleware/adminauth/adminauth.middleware"
 import {InitMiddleware} from './middleware/init/init.middleware';
 import { Config } from './config/config';
 
@@ -25,8 +25,8 @@ import { Config } from './config/config';
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
     consumer
-      .apply(AdminauthMiddleware)
-      .forRoutes(`${Config.adminPath}/*`)
+      // .apply(AdminauthMiddleware)
+      // .forRoutes(`${Config.adminPath}/*`)
       .apply(InitMiddleware)
       .forRoutes('*');
   }

@@ -26,10 +26,13 @@ export class FocusService {
     }       
 }
   async add(json) {
+    console.log("%c Line:29 🥛 json", "color:#42b983", json);
     try {
       var result = await this.focusRepository.save(json);
+      console.log("%c Line:32 🥥 result", "color:#2eafb0", result);
       return result;
     } catch (error) {
+      console.log("%c Line:35 🥛 error", "color:#ea7e5c", error);
       return null;
     }
   }

@@ -31,12 +31,23 @@ import { GoodsController } from './goods/goods.controller';
 import { GoodsService } from 'src/service/goods/goods.service';
 import { GoodsColorController } from './goods-color/goods-color.controller';
 import { GoodsColorService } from 'src/service/goods-color/goods-color.service';
+import { JwtModule } from '@nestjs/jwt';
+import { PassportModule } from '@nestjs/passport';
+import { LocalStrategy } from 'src/module/admin/login/local.strategy';
+import { JwtStrategy } from 'src/module/admin/login/jwt.strategy';
+// import { NoAuthGuard } from "src/guards/noAuthGuard.guard"
 @Module({
   imports: [
     TypeOrmModule.forFeature([Admin,Role,Access,RoleAccess,Focus,GoodsType,GoodsTypeAttribute,GoodsCate,Goods,GoodsColor]),
+    JwtModule.register({
+      secret:"xylxm",
+      signOptions: { expiresIn: '3d' },
+      
+    }),
+    PassportModule
   ],
   controllers: [MainController, LoginController, ManagerController,RoleController,AccessController, FocusController, GoodsTypeController, GoodsTypeAttributeController, GoodsCateController, GoodsController, GoodsColorController],
-  providers: [ToolsService,AdminService,RoleService,AccessService,FocusService,GoodsTypeService,GoodsTypeAttributeService,GoodsCateService,GoodsService,GoodsColorService],
+  providers: [ToolsService,AdminService,RoleService,AccessService,FocusService,GoodsTypeService,GoodsTypeAttributeService,GoodsCateService,GoodsService,GoodsColorService,LocalStrategy,JwtStrategy],//
   exports:[ToolsService,AdminService,RoleService,AccessService,FocusService]
 })
 export class AdminModule {}
