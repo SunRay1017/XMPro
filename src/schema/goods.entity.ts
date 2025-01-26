@@ -9,13 +9,13 @@ export class Goods {
   title: string;
   @Column({ default: '' })
   sub_title: string;
-  @Column({ default: '' })
+  @Column({ default: '', nullable: true })
   goods_sn: string;
-  @Column({ default: '' })
+  @Column({ default: '', nullable: true })
   cate_id: string;
-  @Column({ default: 100 })
+  @Column({ default: 100, nullable: true })
   click_count: number
-  @Column({ default: 1000 })
+  @Column({ default: 1000, nullable: true })
   goods_number: number
   @Column({ default: 0 })
   shop_price: number
@@ -37,13 +37,13 @@ export class Goods {
   goods_color: string;
   @Column({ default: '' })
   goods_keywords: string;
-  @Column({ default: '' })
+  @Column({ default: '', nullable: true })
   goods_desc: string;
-  @Column({ default: '' })
+  @Column({ default: '', nullable: true,length:10000 })
   goods_content: string;
-  @Column({ default: 100 })
+  @Column({ default: 100, nullable: true })
   sort: number;
-  @Column({ default: 0 })
+  @Column({ default: 0, nullable: true })
   is_delete: number
   @Column({ default: 0 })
   is_hot: number

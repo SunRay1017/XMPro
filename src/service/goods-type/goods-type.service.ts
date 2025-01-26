@@ -35,9 +35,11 @@ export class GoodsTypeService {
   }
 
   async update(json) {
+    console.log("%c Line:38 🍪 json", "color:#fca650", json);
     try {
       // 先根据admin_id找出数据库的这条数据
       var oldData = await this.goodsTypeRepository.findOne({ where: { _id: json._id } })
+      console.log("%c Line:42 🍬 oldData", "color:#3f7cff", oldData);
       await this.goodsTypeRepository.update(oldData, json);
       return { code: "success", msg: '更新成功', data: json };
     } catch (error) {

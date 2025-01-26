@@ -9,9 +9,17 @@ export class GoodsTypeAttributeService {
   constructor(@InjectRepository(GoodsTypeAttribute)
   private readonly goodsTypeAttributeRepository: Repository<GoodsTypeAttribute>) { }
 
-  async find() {
+  async find(id) {
     try {
-      return await this.goodsTypeAttributeRepository.find();
+      return await this.goodsTypeAttributeRepository.find({ where: { cate_id: id } });
+    } catch (error) {
+      console.log("%c Line:16 🍿 error", "color:#93c0a4", error);
+      return [];
+    }
+  }
+  async findById(id) {
+    try {
+      return await this.goodsTypeAttributeRepository.find({ where: { _id: id } });
     } catch (error) {
       return [];
     }

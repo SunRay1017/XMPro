@@ -13,12 +13,14 @@ import { GoodsType } from '../../schema/goods_type.entity';
 import { GoodsColor } from '../../schema/goods_color.entity';
 import { GoodsTypeAttribute } from '../../schema/goods_type_attribute.entity';
 import { GoodsCate } from '../../schema/goods_cate.entity';
+import { GoodsImg } from '../../schema/goods_image.entity';
+import { GoodsAttr } from '../../schema/goods_attr.entity';
 import { Goods } from '../../schema/goods.entity';
 import { AdminService } from 'src/service/admin/admin.service';
 import { RoleService } from 'src/service/role/role.service';
 import { RoleController } from './role/role.module';
-import {AccessService} from "src/service/access/access.service"
-import {FocusService} from "src/service/focus/focus.service"
+import { AccessService } from "src/service/access/access.service"
+import { FocusService } from "src/service/focus/focus.service"
 import { AccessController } from './access/access.controller';
 import { FocusController } from './focus/focus.controller';
 import { GoodsTypeService } from 'src/service/goods-type/goods-type.service';
@@ -35,19 +37,22 @@ import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
 import { LocalStrategy } from 'src/module/admin/login/local.strategy';
 import { JwtStrategy } from 'src/module/admin/login/jwt.strategy';
-// import { NoAuthGuard } from "src/guards/noAuthGuard.guard"
+import { GoodsImageService } from 'src/service/goods-image/goods-image.service';
+import { GoodsAttrService } from 'src/service/goods-attr/goods-attr.service';
+
 @Module({
   imports: [
-    TypeOrmModule.forFeature([Admin,Role,Access,RoleAccess,Focus,GoodsType,GoodsTypeAttribute,GoodsCate,Goods,GoodsColor]),
+    TypeOrmModule.forFeature([Admin,
+      Role, Access, RoleAccess, Focus, GoodsType, GoodsTypeAttribute, GoodsCate, Goods, GoodsColor, GoodsImg, GoodsAttr]),
     JwtModule.register({
-      secret:"xylxm",
+      secret: "xylxm",
       signOptions: { expiresIn: '3d' },
-      
+
     }),
     PassportModule
   ],
-  controllers: [MainController, LoginController, ManagerController,RoleController,AccessController, FocusController, GoodsTypeController, GoodsTypeAttributeController, GoodsCateController, GoodsController, GoodsColorController],
-  providers: [ToolsService,AdminService,RoleService,AccessService,FocusService,GoodsTypeService,GoodsTypeAttributeService,GoodsCateService,GoodsService,GoodsColorService,LocalStrategy,JwtStrategy],//
-  exports:[ToolsService,AdminService,RoleService,AccessService,FocusService]
+  controllers: [MainController, LoginController, ManagerController, RoleController, AccessController, FocusController, GoodsTypeController, GoodsTypeAttributeController, GoodsCateController, GoodsController, GoodsColorController],
+  providers: [ToolsService, AdminService, RoleService, AccessService, FocusService, GoodsTypeService, GoodsTypeAttributeService, GoodsCateService, GoodsService, GoodsColorService, GoodsImageService, GoodsAttrService, LocalStrategy, JwtStrategy],//
+  exports: [ToolsService, AdminService, RoleService, AccessService, FocusService]
 })
-export class AdminModule {}
+export class AdminModule { }

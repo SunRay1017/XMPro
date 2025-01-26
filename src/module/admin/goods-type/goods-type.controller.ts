@@ -34,7 +34,11 @@ export class GoodsTypeController {
   @Post('doAdd')
   async doAdd(@Body() body, @Response() res) {
     await this.goodsTypeService.add(body);
-    this.toolsService.success(res, `/${Config.adminPath}/goodsType`);
+    res.send({
+      status: 200,
+
+    })
+    // this.toolsService.success(res, `/${Config.adminPath}/goodsType`);
   }
   @Get('edit')
   @Render('admin/goodsType/edit')
@@ -47,16 +51,23 @@ export class GoodsTypeController {
 
   @Post('doEdit')
   async doEdit(@Body() body, @Response() res) {
+    console.log("%c Line:54 🥔 body", "color:#7f2b82", body);
 
 
     await this.goodsTypeService.update(body);
 
-    this.toolsService.success(res, `/${Config.adminPath}/goodsType`);
+    res.send({
+      status: 200,
+
+    })
   }
 
-  @Get('delete')
-  async delete(@Query() query, @Response() res) {
-    var result = await this.goodsTypeService.delete(query.id);
-    this.toolsService.success(res, `/${Config.adminPath}/goodsType`);
+  @Post('delete')
+  async delete(@Body() body, @Response() res) {
+    var result = await this.goodsTypeService.delete(body.id);
+    res.send({
+      status: 200,
+
+    })
   }
 }
