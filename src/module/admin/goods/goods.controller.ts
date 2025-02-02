@@ -274,4 +274,30 @@ export class GoodsController {
         res.send({ status: 200 })
 
     }
+    @Post("changeStatus")
+    async changeStatus(@Body() body,@Response() res){
+        // 根据商品id找到当前商品
+        // 修改相关状态
+      const record=  await this.goodsService.findOne(body._id)
+      if(record){
+        await this.goodsService.update({
+            ...record,
+            ...body
+        });
+        res.send({status:200})
+      }
+    }
+    @Post("changeNumber")
+    async changeNumber(@Body() body,@Response() res){
+        // 根据商品id找到当前商品
+        // 修改相关数量
+      const record=  await this.goodsService.findOne(body._id)
+      if(record){
+        await this.goodsService.update({
+            ...record,
+            ...body
+        });
+        res.send({status:200})
+      }
+    }
 }

@@ -39,11 +39,16 @@ import { LocalStrategy } from 'src/module/admin/login/local.strategy';
 import { JwtStrategy } from 'src/module/admin/login/jwt.strategy';
 import { GoodsImageService } from 'src/service/goods-image/goods-image.service';
 import { GoodsAttrService } from 'src/service/goods-attr/goods-attr.service';
-
+import { NavController } from './nav/nav.controller';
+import { NavService } from 'src/service/nav/nav.service';
+import { Nav } from 'src/schema/nav.entity';
+import { SettingController } from './setting/setting.controller';
+import { SettingService } from "src/service/setting/setting.service"
+import { Setting } from 'src/schema/setting.entity';
 @Module({
   imports: [
     TypeOrmModule.forFeature([Admin,
-      Role, Access, RoleAccess, Focus, GoodsType, GoodsTypeAttribute, GoodsCate, Goods, GoodsColor, GoodsImg, GoodsAttr]),
+      Role, Access, RoleAccess, Focus, GoodsType, GoodsTypeAttribute, GoodsCate, Goods, GoodsColor, GoodsImg, GoodsAttr, Nav,Setting]),
     JwtModule.register({
       secret: "xylxm",
       signOptions: { expiresIn: '3d' },
@@ -51,8 +56,8 @@ import { GoodsAttrService } from 'src/service/goods-attr/goods-attr.service';
     }),
     PassportModule
   ],
-  controllers: [MainController, LoginController, ManagerController, RoleController, AccessController, FocusController, GoodsTypeController, GoodsTypeAttributeController, GoodsCateController, GoodsController, GoodsColorController],
-  providers: [ToolsService, AdminService, RoleService, AccessService, FocusService, GoodsTypeService, GoodsTypeAttributeService, GoodsCateService, GoodsService, GoodsColorService, GoodsImageService, GoodsAttrService, LocalStrategy, JwtStrategy],//
+  controllers: [MainController, LoginController, ManagerController, RoleController, AccessController, FocusController, GoodsTypeController, GoodsTypeAttributeController, GoodsCateController, GoodsController, GoodsColorController, NavController, SettingController],
+  providers: [ToolsService, AdminService, RoleService, AccessService, FocusService, GoodsTypeService, GoodsTypeAttributeService, GoodsCateService, GoodsService, GoodsColorService, GoodsImageService, GoodsAttrService, LocalStrategy, JwtStrategy, NavService, SettingService],//
   exports: [ToolsService, AdminService, RoleService, AccessService, FocusService]
 })
 export class AdminModule { }
