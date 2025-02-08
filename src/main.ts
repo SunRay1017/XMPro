@@ -6,7 +6,9 @@ import { join } from "path"
 import * as cookieParser from "cookie-parser"
 import * as session from "express-session"
 async function bootstrap() {
-  const app:any = await NestFactory.create<NestExpressApplication>(AppModule);
+  const app: any = await NestFactory.create<NestExpressApplication>(AppModule);
+
+  app.enableCors()
   // 设置项目静态资源目录
   app.useStaticAssets(join(__dirname, '..', 'public'));
   // 设置视图目录

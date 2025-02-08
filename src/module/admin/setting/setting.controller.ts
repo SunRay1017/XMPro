@@ -2,7 +2,9 @@ import { Controller, Get, Post, Response, UseInterceptors, UploadedFiles, Body }
 import { SettingService } from 'src/service/setting/setting.service';
 import { FileFieldsInterceptor } from '@nestjs/platform-express';
 import { ToolsService } from 'src/service/tools/tools.service';
-@Controller('setting')
+import { Config } from '../../../config/config'
+
+@Controller(`${Config.adminPath}/setting`)
 export class SettingController {
   constructor(private settingService: SettingService, private toolsService: ToolsService) { }
   /**获取网站设置数据 */
@@ -12,12 +14,13 @@ export class SettingController {
     res.send({ status: 200, data: result })
   }
   /**新增网站设置数据 */
-  @Get("doAdd")
+  @Post("doAdd")
   @UseInterceptors(FileFieldsInterceptor([
     { name: 'site_logo', maxCount: 1 },
     { name: 'no_picture', maxCount: 1 },
   ]))
   async doAdd(@UploadedFiles() files, @Body() body, @Response() res) {
+    console.log("%c Line:23 🍎 files", "color:#b03734", files);
     var addJson = body;
     if (files.site_logo) {
       var siteLogoDir = this.toolsService.uploadFile(files.site_logo[0]).saveDir;
