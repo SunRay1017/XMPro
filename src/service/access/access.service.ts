@@ -11,7 +11,7 @@ export class AccessService {
 
   ) { }
   async find() {
-    var data = await this.accessRepository.find()
+    var data = await this.accessRepository.find({order:{sort:"ASC"}})
     return data
   }
   async findModules() {

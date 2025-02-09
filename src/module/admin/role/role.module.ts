@@ -177,7 +177,15 @@ export class RoleController {
     @Post('getAccessByRoleId')
     async getAccessByRoleId(@Body() body, @Response() res) {
         const accessRes = await this.roleService.queryAccess(body.role_id)
-
+        // 查询所有的权限列表，用来翻译
+        const list = await this.accessService.find()
+        for (let i = 0; i < accessRes.length; i++) {
+            for (let j = 0; j < list.length; j++) {
+                if (accessRes[i].access_id === list[j].access_id) {
+                    accessRes[i] = { ...accessRes[i], ...list[j] }
+                }
+            }
+        }
         res.send({
             status: 200,
             msg: "",

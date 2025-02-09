@@ -36,6 +36,7 @@
     "froala-editor": "^4.3.0",
     "jimp": "^1.6.0",
     "md5": "^2.3.0",
+    "mkdirp": "^3.0.1",
     "mysql2": "^3.11.0",
     "passport": "^0.4.1",
     "passport-jwt": "^4.0.0",

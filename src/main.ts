@@ -34,6 +34,6 @@ async function bootstrap() {
   const document = SwaggerModule.createDocument(app, options);
   //配置swgger地址
   SwaggerModule.setup('/fs_admin/api', app, document);
-  await app.listen(3000);
+  await app.listen(3002);
 }
 bootstrap();
