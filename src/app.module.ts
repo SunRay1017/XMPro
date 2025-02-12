@@ -10,10 +10,10 @@ import { Config } from './config/config';
 @Module({
   imports: [TypeOrmModule.forRoot({
     type: 'mysql',
-    host: "localhost",
+    host: "1.95.40.201",
     port: 3306,
-    username: 'root',
-    password: '100517',
+    username: 'app1',
+    password: 'xyl100517',
     database: 'xiaomi',
     charset: "utf8mb4", // 设置chatset编码为utf8mb4
     autoLoadEntities: true,
