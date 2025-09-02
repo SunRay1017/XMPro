@@ -1,17 +1,21 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Inject } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Access } from '../../schema/access.entity';
-
+import { CACHE_MANAGER, } from "@nestjs/cache-manager";
+import { Cache } from "cache-manager";
 @Injectable()
 export class AccessService {
   constructor(
     @InjectRepository(Access)
     private readonly accessRepository: Repository<Access>,
-
+    @Inject(CACHE_MANAGER) private cacheManager: Cache 
   ) { }
   async find() {
-    var data = await this.accessRepository.find({order:{sort:"ASC"}})
+    await this.cacheManager.set('age',1);
+    const value = await this.cacheManager.get('age');
+    console.log("%c Line:16 🍕 value", "color:#42b983", value);
+    var data = await this.accessRepository.find({ order: { sort: "ASC" } })
     return data
   }
   async findModules() {
@@ -29,7 +33,7 @@ export class AccessService {
 
   async add(access) {
     try {
-     
+
       await this.accessRepository.save(access);
       return { code: "success", msg: '新增权限成功', data: access };
     } catch (error) {

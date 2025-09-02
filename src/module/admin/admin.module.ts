@@ -45,19 +45,49 @@ import { Nav } from 'src/schema/nav.entity';
 import { SettingController } from './setting/setting.controller';
 import { SettingService } from "src/service/setting/setting.service"
 import { Setting } from 'src/schema/setting.entity';
+import { CacheModule, CACHE_MANAGER } from '@nestjs/cache-manager';
+import KeyvRedis from '@keyv/redis';
+import { Keyv } from 'keyv';
+import { CacheableMemory } from 'cacheable';
+import {EventsGateway} from "src/module/admin/events/events.gateway"
+const redisOptions = {
+  url: 'redis://1.95.40.201:6379', // The Redis server URL (use 'rediss' for TLS)
+  password: 'xyl100517', // Optional password if Redis has authentication enabled
+
+  socket: {
+    host: '1.95.40.201', // Hostname of the Redis server
+    port: 6379,        // Port number
+    reconnectStrategy: (retries) => Math.min(retries * 50, 2000), // Custom reconnect logic
+
+    tls: false, // Enable TLS if you need to connect over SSL
+    keepAlive: 30000, // Keep-alive timeout (in milliseconds)
+  }
+};
 @Module({
   imports: [
     TypeOrmModule.forFeature([Admin,
-      Role, Access, RoleAccess, Focus, GoodsType, GoodsTypeAttribute, GoodsCate, Goods, GoodsColor, GoodsImg, GoodsAttr, Nav,Setting]),
+      Role, Access, RoleAccess, Focus, GoodsType, GoodsTypeAttribute, GoodsCate, Goods, GoodsColor, GoodsImg, GoodsAttr, Nav, Setting]),
     JwtModule.register({
       secret: "xylxm",
       signOptions: { expiresIn: '3d' },
 
     }),
-    PassportModule
+    PassportModule,
+    CacheModule.registerAsync({
+      useFactory: async () => {
+        return {
+          stores: [
+            new Keyv({
+              store: new CacheableMemory({ ttl: 60000, lruSize: 5000 }),
+            }),
+            new KeyvRedis(redisOptions),
+          ],
+        };
+      },
+    }),
   ],
   controllers: [MainController, LoginController, ManagerController, RoleController, AccessController, FocusController, GoodsTypeController, GoodsTypeAttributeController, GoodsCateController, GoodsController, GoodsColorController, NavController, SettingController],
-  providers: [ToolsService, AdminService, RoleService, AccessService, FocusService, GoodsTypeService, GoodsTypeAttributeService, GoodsCateService, GoodsService, GoodsColorService, GoodsImageService, GoodsAttrService, LocalStrategy, JwtStrategy, NavService, SettingService],//
+  providers: [ToolsService, AdminService, RoleService, AccessService, FocusService, GoodsTypeService, GoodsTypeAttributeService, GoodsCateService, GoodsService, GoodsColorService, GoodsImageService, GoodsAttrService, LocalStrategy, JwtStrategy, NavService, SettingService,EventsGateway],//
   exports: [ToolsService, AdminService, RoleService, AccessService, FocusService]
 })
 export class AdminModule { }

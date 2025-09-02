@@ -4,10 +4,10 @@ import { Config } from '../../../config/config'
 import { RoleService } from '../../../service/role/role.service';
 import { ToolsService } from '../../../service/tools/tools.service';
 import { AdminService } from 'src/service/admin/admin.service';
-
+import { EventsGateway } from '../events/events.gateway';
 @Controller(`${Config.adminPath}/manager`)
 export class ManagerController {
-  constructor(private roleService: RoleService, private toolsService: ToolsService, private adminService: AdminService) { }
+  constructor(private roleService: RoleService, private toolsService: ToolsService, private adminService: AdminService,private eventsGateWay:EventsGateway) { }
 
   @Get()
   @Render("admin/manager/index")
@@ -31,6 +31,7 @@ export class ManagerController {
   // @UseGuards(AuthGuard('jwt'))
   @Get("list")
   async getManagerList(@Response() res) {
+this.eventsGateWay.server.emit("message","hello client")
     var result = await this.adminService.find();
     const adminList = []
     var roleList = await this.roleService.find()

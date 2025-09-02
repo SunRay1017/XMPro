@@ -4,8 +4,9 @@ import { AdminModule } from './module/admin/admin.module';
 import { DefaultModule } from './module/default/default.module';
 import { ApiModule } from './module/api/api.module';
 // import { AdminauthMiddleware } from "./middleware/adminauth/adminauth.middleware"
-import {InitMiddleware} from './middleware/init/init.middleware';
+import { InitMiddleware } from './middleware/init/init.middleware';
 import { Config } from './config/config';
+import { RedisModule } from './module/redis/redis.module';
 
 @Module({
   imports: [TypeOrmModule.forRoot({
@@ -18,7 +19,7 @@ import { Config } from './config/config';
     charset: "utf8mb4", // 设置chatset编码为utf8mb4
     autoLoadEntities: true,
     synchronize: true
-  }), AdminModule, DefaultModule, ApiModule],
+  }), AdminModule, DefaultModule, ApiModule, RedisModule],
   controllers: [],
   providers: [],
 })
